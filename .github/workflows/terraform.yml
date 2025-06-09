@@ -31,11 +31,11 @@ jobs:
         terraform_version: 1.12.1
     
     - name: Terraform Init
-      run: terraform init
+      run: terraform init -input=false
 
     - name: Terraform Plan
-      run: terraform plan
+      run: terraform plan -input=false -no-color
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve -input=false

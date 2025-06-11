@@ -8,32 +8,25 @@ data "archive_file" "lambda_zip" {
     output_path = "${path.module}/lambda_function_payload.zip"
 }
 
-data "aws_iam_role" "main_role" {
-    name = "LabRole"
-}
-
-resource "aws_lambda_function" "hello_world_lambda" {
-    filename = data.archive_file.lambda_zip.output_path
+module "simple_lambda" {
+    source = "./modules/aws-lambda"
 
     function_name = "SimpleTerraformLambda"
-
-    role = data.aws_iam_role.main_role.arn
-
-    handler = "lambda_function.lambda_handler"
+    source_code_path = data.archive_file.lambda_zip.output_path
     source_code_hash = data.archive_file.lambda_zip.output_base64sha256
     runtime = "python3.13"
 
     tags = {
-        ManagedBy = "Terraform"
+      ManagedBy = "Terraform"
+      Project = "SimpleLambda"
+      Environment = "Development"
     }
 }
 
 output "lambda_function_name" {
-    description = "Name of the Lambda function"
-    value = aws_lambda_function.hello_world_lambda.function_name
+    value = module.simple_lambda.function_name
 }
 
-output "used_iam_role_arn" {
-    description = "ARN of the existing IAM role"
-    value = data.aws_iam_role.main_role.arn
+output "iam_role_arn" {
+    value = module.simple_lambda.iam_role_name
 }

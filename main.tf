@@ -23,6 +23,18 @@ module "simple_lambda" {
     }
 }
 
+resource "aws_secretsmanager_secret" "api_key_secret" {
+    name = "/terraform_sample/api_key_secret"
+}
+
+resource "aws_secretsmanager_secret" "db_credentials_secret" {
+    name = "/my_app_secrets/db_credentials"
+    description = "Database credentials"
+    tags = {
+        Project = "TerraformLambdaSecretsManager"
+    }
+}
+
 output "lambda_function_name" {
     value = module.simple_lambda.function_name
 }

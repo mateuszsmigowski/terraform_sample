@@ -10,5 +10,5 @@ output "function_arn" {
 
 output "iam_role_name" {
   description = "The name of the IAM role created for the Lambda."
-  value       = data.aws_iam_role.lambda_exec_role.name
+  value       = data.aws_iam_role.main_role.name
 }
